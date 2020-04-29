@@ -1,0 +1,18 @@
+#!/bin/bash
+
+sdir=`dirname $(readlink -f "$BASH_SOURCE")`
+setParentWindowPath=$sdir/../bin/setParentWindow.so
+PCMD="IFS=';' read -sdR -p $'\E[6n' -a pos ; ROW=\\\$((\\\${pos[0]:2})) ; COL=\\\$((\\\${pos[1]} - 1)) ; export ROW COL ROWS=\\\`tput lines\\\` COLS=\\\`tput cols\\\`"
+if [ "$1" == "" ]; then
+  read -r -d '' bashrc << \
+.bash
+source ~/.bashrc
+cd $PWD
+export PS1='gter '\$PS1 LD_PRELOAD=$setParentWindowPath
+PROMPT_COMMAND="\$PROMPT_COMMAND; $PCMD"
+.bash
+  bash --init-file <(echo "$bashrc")
+else
+  IFS=';' read -sdR -p $'\E[6n' -a pos ; ROW=$((${pos[0]:2} - 1)) ; COL=$((${pos[1]} - 1)) ; export ROW COL ROWS=`tput lines` COLS=`tput cols`
+  LD_PRELOAD=$setParentWindowPath $@
+fi

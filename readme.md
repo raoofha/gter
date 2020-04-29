@@ -1,11 +1,12 @@
-# gter : a terminal for GUI apps (WIP)
-gter is actually a window manager based on [basic_wm](https://github.com/jichu4n/basic_wm)
+# gter : embed a GUI app inside a terminal window or any other window
+
+tested only with xterm, I also use i3 window manager.
+this is much better solution than the previous approach.
 
 ![gter](gter.gif)
 
 # requirement
 * X11
-* Xephyr
 * xterm
 * bash
 
@@ -13,5 +14,13 @@ gter is actually a window manager based on [basic_wm](https://github.com/jichu4n
 ```
 git clone https://github.com/raoofha/gter
 cd gter
-bash gter.cpp
+bash $PWD/src/setParentWindow.c build
+# add it to your path
+ln -s $PWD/src/gter ~/.local/bin/gter
+chmod +x ~/.local/bin/gter
+```
+
+# set window parent on other windows
+```
+WINDOWID=$WINDOWID WINDOWX=0 WINDOWY=0 LD_PRELOAD=./bin/setParentWindow.so xclock
 ```
